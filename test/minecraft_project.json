@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "tracks": [
+    {
+      "name": "Minecraft",
+      "path": "src/Minecraft.mid",
+      "gain": 0.7,
+      "mute": false,
+      "solo": false,
+      "offset_seconds": 0.0,
+      "speed": 1.2,
+      "pitch_semitones": 2.0
+    }
+  ]
+}

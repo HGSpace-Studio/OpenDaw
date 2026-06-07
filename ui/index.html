@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OpenDAW</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand-cluster">
+          <div class="app-badge">OD</div>
+          <div class="brand-copy">
+            <p class="eyebrow">OpenDAW</p>
+            <h1 data-i18n="arrangement">Arrangement</h1>
+          </div>
+        </div>
+
+        <div class="transport-cluster">
+          <button id="playButton" class="transport-btn primary" data-i18n="play">Play</button>
+          <button id="stopButton" class="transport-btn" data-i18n="stop">Stop</button>
+          <button id="recordButton" class="transport-btn record" data-i18n="record">Record</button>
+          <button id="importTrackButton" class="transport-btn" data-i18n="import">Import</button>
+          <button id="addTrackButton" class="transport-btn" data-i18n="newTrack">New Track</button>
+          <button id="addLiveMidiButton" class="transport-btn" data-i18n="liveMidi">Live MIDI</button>
+          <button id="duplicateTrackButton" class="transport-btn" data-i18n="duplicate">Duplicate</button>
+          <button id="exportMixButton" class="transport-btn ghost" data-i18n="exportMix">Export Mix</button>
+        </div>
+
+        <div class="session-cluster">
+          <div class="tempo-box">
+            <span class="tempo-label" data-i18n="tempo">Tempo</span>
+            <input id="tempoInput" type="number" min="60" max="200" step="1" value="120" />
+          </div>
+          <button id="saveProjectButton" class="transport-btn ghost" data-i18n="save">Save</button>
+          <button id="loadProjectButton" class="transport-btn ghost" data-i18n="load">Load</button>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <aside class="sidebar">
+          <section class="panel library-panel">
+            <div class="panel-heading">
+              <span class="panel-title" data-i18n="library">Library</span>
+              <span class="panel-meta" data-i18n="soundfonts">SoundFonts</span>
+            </div>
+            <div class="patch-list" id="soundfontLibrary"></div>
+          </section>
+
+          <section class="panel inspector-panel">
+            <div class="panel-heading">
+              <span class="panel-title" data-i18n="inspector">Inspector</span>
+              <span class="panel-meta" id="selectedTrackMeta">Track 1</span>
+            </div>
+            <div class="inspector-grid">
+              <label class="field-block">
+                <span data-i18n="name">Name</span>
+                <input id="trackNameInput" type="text" />
+              </label>
+              <label class="field-block">
+                <span data-i18n="gain">Gain</span>
+                <input id="gainInput" type="range" min="0" max="1.5" step="0.01" />
+              </label>
+              <label class="field-block">
+                <span data-i18n="pan">Pan</span>
+                <input id="panInput" type="range" min="-1" max="1" step="0.01" />
+              </label>
+              <label class="field-block">
+                <span data-i18n="color">Color</span>
+                <input id="colorInput" type="color" value="#6ca0ff" />
+              </label>
+              <label class="field-block">
+                <span data-i18n="speed">Speed</span>
+                <input id="speedInput" type="range" min="0.25" max="2" step="0.01" />
+              </label>
+              <label class="field-block">
+                <span data-i18n="pitch">Pitch</span>
+                <input id="pitchInput" type="range" min="-12" max="12" step="0.1" />
+              </label>
+              <label class="field-block">
+                <span data-i18n="offset">Offset</span>
+                <input id="offsetInput" type="range" min="0" max="8" step="0.05" />
+              </label>
+              <label class="field-block">
+                <span data-i18n="keyboardPort">Keyboard Port</span>
+                <select id="keyboardPortSelect"></select>
+              </label>
+            </div>
+            <div class="inspector-stats">
+              <div class="stat-pill">
+                <span data-i18n="length">Length</span>
+                <strong id="trackLengthStat">8 bars</strong>
+              </div>
+              <div class="stat-pill">
+                <span data-i18n="notes">Notes</span>
+                <strong id="trackNoteStat">0</strong>
+              </div>
+              <div class="stat-pill">
+                <span data-i18n="pattern">Pattern</span>
+                <strong id="trackPatternStat">Empty</strong>
+              </div>
+            </div>
+            <div class="inspector-actions">
+              <button id="connectKeyboardButton" class="transport-btn ghost small" data-i18n="connectKeyboard">Connect Keyboard</button>
+              <button id="disconnectKeyboardButton" class="transport-btn ghost small" data-i18n="disconnectKeyboard">Disconnect Keyboard</button>
+              <button id="setBasicInstrumentButton" class="transport-btn ghost small" data-i18n="basicSynth">Basic Synth</button>
+              <button id="setSoundfontButton" class="transport-btn ghost small" data-i18n="setSoundfont">Set SoundFont</button>
+            </div>
+          </section>
+        </aside>
+
+        <div class="pane-resizer vertical" id="sidebarResizer" title="Resize sidebar"></div>
+
+        <section class="arrangement-shell">
+          <section class="panel arrangement-panel">
+            <div class="panel-heading arrangement-heading">
+              <div class="arrangement-title-cluster">
+                <span class="panel-title" data-i18n="tracks">Tracks</span>
+                <div class="pane-resizer mini vertical" id="trackHeaderResizer" title="Resize track headers"></div>
+              </div>
+              <span class="panel-meta" id="rulerMeta">00:00.000</span>
+            </div>
+            <div class="arrangement-viewport" id="arrangementViewport">
+              <div class="arrangement-canvas" id="arrangementCanvas">
+                <div class="timeline-scale" id="timelineScale"></div>
+                <div class="loop-overlay" id="loopOverlay"></div>
+                <div class="playhead-marker" id="playheadMarker"></div>
+                <div class="arrangement-grid" id="arrangementGrid"></div>
+              </div>
+            </div>
+          </section>
+
+          <div class="pane-resizer horizontal" id="dockResizer" title="Resize bottom dock"></div>
+
+          <section class="bottom-dock">
+            <section class="panel piano-roll-panel">
+              <div class="panel-heading">
+                <span class="panel-title" data-i18n="pianoRoll">Piano Roll</span>
+                <span class="panel-meta" id="pianoRollHint">Double-click a clip to open piano roll</span>
+              </div>
+              <div class="piano-roll-tools">
+                <button id="clearPatternButton" class="transport-btn ghost small" data-i18n="clearPattern">Clear Pattern</button>
+                <button id="fillPatternButton" class="transport-btn ghost small" data-i18n="fillDemo">Fill Demo</button>
+                <div class="step-legend" data-i18n="stepsPerBar">16 steps per bar</div>
+              </div>
+              <div class="piano-roll-shell collapsed" id="pianoRollShell">
+                <div class="piano-roll-empty" id="pianoRollEmpty">Double-click a MIDI clip to edit notes.</div>
+                <div class="piano-roll" id="pianoRoll"></div>
+              </div>
+            </section>
+
+            <div class="pane-resizer vertical" id="mixerResizer" title="Resize mixer"></div>
+
+            <section class="panel mixer-panel">
+              <div class="panel-heading">
+                <span class="panel-title" data-i18n="mixer">Mixer</span>
+                <span class="panel-meta" data-i18n="channelStrips">Channel strips</span>
+              </div>
+              <div class="mixer-strips" id="mixerStrips"></div>
+            </section>
+          </section>
+        </section>
+      </main>
+
+      <footer class="statusbar">
+        <div class="status-group">
+          <span class="status-dot"></span>
+          <span id="statusText">Ready</span>
+        </div>
+        <div class="status-group">
+          <span id="playheadText">Bar 1 Beat 1</span>
+          <span id="projectSummary">4 tracks</span>
+        </div>
+        <div class="status-group layout-controls">
+          <span class="status-layout-label">UI</span>
+          <input id="uiScaleInput" type="range" min="0.7" max="1.1" step="0.01" value="0.8" />
+          <span id="uiScaleValue">80%</span>
+          <button id="resetLayoutButton" class="transport-btn ghost small">Default Layout</button>
+        </div>
+      </footer>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

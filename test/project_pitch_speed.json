@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "tracks": [
+    {
+      "name": "suzume_no_tojimari",
+      "path": "src/suzume_no_tojimari.wav",
+      "gain": 1.0,
+      "mute": false,
+      "solo": false,
+      "offset_seconds": 0.0,
+      "speed": 1.5,
+      "pitch_semitones": 1.0
+    }
+  ]
+}

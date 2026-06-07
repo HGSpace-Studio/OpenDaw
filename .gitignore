@@ -1,2 +1,5 @@
 target/
 .vscode
+test
+test/output/
+test/output/*.wav

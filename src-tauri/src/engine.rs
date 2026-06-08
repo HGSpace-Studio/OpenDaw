@@ -19,7 +19,7 @@ use std::sync::{Arc, Mutex};
 use std::time::Instant;
 
 const RECORDED_MIDI_PATH: &str = "<recorded-midi>";
-const SOUNDFONT_SCAN_DIR: &str = "/home/archzero/OpenDaw/test/src";
+const SOUNDFONT_SCAN_DIR: &str = "./test/src";
 
 #[derive(Debug, Clone)]
 enum TrackSource {
